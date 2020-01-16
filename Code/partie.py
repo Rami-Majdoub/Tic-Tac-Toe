@@ -1,8 +1,7 @@
-__authors__ = "Ajoutez les noms des membres de votre équipe!"
-__date__ = "Ajoutez la date de remise"
+__authors__ = "Rami Majdoub"
+__date__ = "Jan. 2020"
 
-"""Ce fichier permet de...(complétez la description de ce que
-ce fichier est supposé faire ! """
+"""Ce fichier permet de définir la classe Partie d'un jeu Tic-Tac-Toe """
 
 from plateau import Plateau
 from joueur import Joueur
@@ -93,23 +92,35 @@ class Partie:
             joueur2 = Joueur("Siwar", "Personne", pion2)
             self.joueurs.append([joueur1, joueur2])
 
-        self.joueur_courant = joueur1
-        # start playing
-        while self.plateau.non_plein():
-            self.tour(1)
-            if self.plateau.est_gagnant(self.joueur_courant.pion): break
+        # premier joueur a commencer
+        if self.joueur_courant == None:
+            premier_joueur = self.joueur_courant = joueur1
+        while True:
+            while self.plateau.non_plein():
+                self.tour(1)
+                if self.plateau.est_gagnant(self.joueur_courant.pion): break
             
-            # selection de joueur suivant
-            if self.joueur_courant == joueur1: self.joueur_courant = joueur2
-            else: self.joueur_courant = joueur1
-        
-        print("Partie terminée! Le joueur gagnant est: ", self.joueur_courant.nom)
-        print("Parties gagnées par ",  joueur1.nom,  " : ", joueur1.nb_parties_gagnees)
-        print("Parties gagnées par ",  joueur2.nom,  " : ", joueur2.nb_parties_gagnees)
-        print("Parties nulles: ", self.nb_parties_nulles)
-        print("Voulez-vous recommencer (O,N)?")
+                # selection de joueur suivant
+                if self.joueur_courant == joueur1: self.joueur_courant = joueur2
+                else: self.joueur_courant = joueur1
+
+            if self.plateau.est_gagnant(self.joueur_courant.pion):
+                print("Partie terminée! Le joueur gagnant est: ", self.joueur_courant.nom)
+                self.joueur_courant.nb_parties_gagnees = self.joueur_courant.nb_parties_gagnees + 1
+            else:
+                print("Partie nulle")
+                self.nb_parties_nulles = self.nb_parties_nulles + 1
+            print("Parties gagnées par ",  joueur1.nom,  " : ", joueur1.nb_parties_gagnees)
+            print("Parties gagnées par ",  joueur2.nom,  " : ", joueur2.nb_parties_gagnees)
+            print("Parties nulles: ", self.nb_parties_nulles)
+            if input("Voulez-vous recommencer (O,N)?").upper() == 'N': break
+            # reinitialisation de plateau
+            self.plateau.initialiser()
+            # joueur suivant
+            if premier_joueur == joueur1: premier_joueur = joueur2
+            else: premier_joueur = joueur1
+            self.joueur_courant = premier_joueur
             
-        
 
     def saisir_nombre(self, nb_min, nb_max):
         """

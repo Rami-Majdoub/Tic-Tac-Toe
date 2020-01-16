@@ -1,9 +1,8 @@
-__authors__ = "Ajoutez les noms des membres de votre équipe!"
-__date__ = "Ajoutez la date de remise"
+__authors__ = "Rami Majdoub"
+__date__ = "Jan. 2020"
 
 """
-Ce fichier permet de...(complétez la description de ce que
-ce fichier est supposé faire !
+Ce fichier permet de définir la classe Plateau d'un jeu Tic-Tac-Toe
 """
 
 from case import Case
