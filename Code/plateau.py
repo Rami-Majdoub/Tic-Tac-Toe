@@ -102,7 +102,7 @@ class Plateau:
         assert isinstance(ligne, int), "Plateau: ligne doit être un entier."
         assert isinstance(colonne, int), "Plateau: colonne doit être un entier."
 
-        return ligne in range(0, 3) and colonne in range(0, 3)
+        return ligne in range(0, 3) and colonne in range(0, 3) and self.cases[ligne,colonne].est_vide()
 
     def selectionner_case(self, ligne, colonne, pion):
         """
@@ -120,7 +120,7 @@ class Plateau:
         assert isinstance(pion, str), "Plateau: pion doit être une chaîne de caractères."
         assert pion in ["O", "X"], "Plateau: pion doit être 'O' ou 'X'."
 
-        pass
+        self.cases[ligne,colonne].contenu = pion #
 
 
     def est_gagnant(self, pion):
@@ -138,7 +138,23 @@ class Plateau:
         assert isinstance(pion, str), "Plateau: pion doit être une chaîne de caractères."
         assert pion in ["O", "X"], "Plateau: pion doit être 'O' ou 'X'."
 
-        pass
+        # ligne 0
+        if self.cases[0,0].contenu == pion and self.cases[0,1].contenu == pion and self.cases[0,2].contenu == pion: return True
+        # ligne 1
+        if self.cases[1,0].contenu == pion and self.cases[1,1].contenu == pion and self.cases[1,2].contenu == pion: return True
+        # ligne 2
+        if self.cases[2,0].contenu == pion and self.cases[2,1].contenu == pion and self.cases[2,2].contenu == pion: return True
+        # colonne 0
+        if self.cases[0,0].contenu == pion and self.cases[1,0].contenu == pion and self.cases[2,0].contenu == pion: return True
+        # colonne 1
+        if self.cases[0,1].contenu == pion and self.cases[1,1].contenu == pion and self.cases[2,1].contenu == pion: return True
+        # colonne 2
+        if self.cases[0,2].contenu == pion and self.cases[1,2].contenu == pion and self.cases[2,2].contenu == pion: return True
+        # diagonale 0
+        if self.cases[0,0].contenu == pion and self.cases[1,1].contenu == pion and self.cases[2,2].contenu == pion: return True
+        # diagonale 1
+        if self.cases[0,2].contenu == pion and self.cases[1,1].contenu == pion and self.cases[2,0].contenu == pion: return True
+        return False
 
     def choisir_prochaine_case(self, pion):
         """
@@ -163,4 +179,10 @@ class Plateau:
         assert isinstance(pion, str), "Plateau: pion doit être une chaîne de caractères."
         assert pion in ["O", "X"], "Plateau: pion doit être 'O' ou 'X'."
 
-        pass
+        # choix pour l'ordinateur (random)
+        from random import randrange
+        while True:
+            ligne = randrange(0, 3)
+            colonne = randrange(0, 3)
+            if self.position_valide(ligne, colonne): break
+        return ligne, colonne

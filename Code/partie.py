@@ -68,14 +68,48 @@ class Partie:
         Si l'utilisateur ne veut plus recommencer, il faut afficher ce message:
         ***Merci et au revoir !***
         """
-        print("""Bienvenue au jeu Tic Tac Toe.
-        ---------------Menu---------------
-        1- Jouer avec l'ordinateur.
-        2- Jouter avec une autre personne.
-        0- Quitter.
-        -----------------------------------
-        Entrez s.v.p. un nombre entre 0 et 2:?
-        """, setp = '|')
+        print("Bienvenue au jeu Tic Tac Toe.")
+        print("---------------Menu---------------")
+        print("1- Jouer avec l'ordinateur.")
+        print("2- Jouter avec une autre personne.")
+        print("0- Quitter.")
+        print("-----------------------------------")
+        choix = self.saisir_nombre(0, 2)
+        if choix == 0:
+            print("***Merci et au revoir !***")
+            exit()
+        elif choix == 1:# contre ordinateur
+            pion1 = self.demander_forme_pion()
+            if pion1 == 'X': pion2 = 'O'
+            else: pion2 = 'X'
+            joueur1 = Joueur("Mondher", "Personne", pion1)
+            joueur2 = Joueur("Colosse", "Ordinateur", pion2)
+            self.joueurs.append([joueur1, joueur2])
+        else: # choix == 2 (contre personne)
+            pion1 = self.demander_forme_pion()
+            if pion1 == 'X': pion2 = 'O'
+            else: pion2 = 'X'
+            joueur1 = Joueur("Mondher", "Personne", pion1)
+            joueur2 = Joueur("Siwar", "Personne", pion2)
+            self.joueurs.append([joueur1, joueur2])
+
+        self.joueur_courant = joueur1
+        # start playing
+        while self.plateau.non_plein():
+            self.tour(1)
+            if self.plateau.est_gagnant(self.joueur_courant.pion): break
+            
+            # selection de joueur suivant
+            if self.joueur_courant == joueur1: self.joueur_courant = joueur2
+            else: self.joueur_courant = joueur1
+        
+        print("Partie terminée! Le joueur gagnant est: ", self.joueur_courant.nom)
+        print("Parties gagnées par ",  joueur1.nom,  " : ", joueur1.nb_parties_gagnees)
+        print("Parties gagnées par ",  joueur2.nom,  " : ", joueur2.nb_parties_gagnees)
+        print("Parties nulles: ", self.nb_parties_nulles)
+        print("Voulez-vous recommencer (O,N)?")
+            
+        
 
     def saisir_nombre(self, nb_min, nb_max):
         """
@@ -98,7 +132,7 @@ class Partie:
 
         while True:
             x = input('Entrer s.v.p un nombre entre {} et {}: ?'.format(nb_min, nb_max))
-            if x.isnumeric() and int(x) in range(nb_min, nb_max): break
+            if x.isnumeric() and int(x) in range(nb_min, nb_max+1): break
             print('***Valeur incorrecte!***.')
         return int(x)
 
@@ -115,26 +149,7 @@ class Partie:
         while True:
             ch = input('Sélectionner s.v.p la forme de votre pion (X, O):? ')
             if ch.upper() in ('O', 'X'): return ch.upper()
-            
-    def tour(self, choix):
-        """
-        Permet d'exécuter le tour d'un joueur (une personne ou un ordinateur).
-        Cette méthode doit afficher le plateau (voir la méthode __str__() de la classe Plateau).
-        Si le joueur courant est un ordinateur, il faut calculer la position de la prochaine
-        case à jouer par cet ordinateur en utilisant la méthode choisir_prochaine_case().
-        Si le joueur courant est une personne, il faut lui demander la position de la prochaine
-        case qu'il veut jouer en utilisant la méthode demander_postion().
-        Finalement, il faut utiliser la méthode selectionner_case() pour modifier le contenu
-        de la case choisie soit par l'ordinateur soit par la personne.
 
-        Args:
-            choix (int): Un entier représentant le choix de l'utilisateur dans le menu du jeu (1 ou 2).
-        """
-
-        assert isinstance(choix, int), "Partie: choix doit être un entier."
-        assert choix in [1, 2], "Partie: choix doit être 1 ou 2."
-
-        pass
 
     def demander_postion(self):
         """
@@ -152,8 +167,42 @@ class Partie:
             (int,int):  Une paire d'entiers représentant les
                         coordonnées (ligne, colonne) de la case choisie.
         """
+        while True:
+            print(self.joueur_courant.nom, "Entrer s.v.p les coordonnées de la case à utiliser:")
+            print("Numéro de la ligne:")
+            ligne = self.saisir_nombre(0, 2)
+            print("Numéro de la colonne:")
+            colonne = self.saisir_nombre(0, 2)
+            if self.plateau.position_valide(ligne, colonne): break
+        return ligne, colonne
+    
+    def tour(self, choix):
+        """
+        Permet d'exécuter le tour d'un joueur (une personne ou un ordinateur).
+        Cette méthode doit afficher le plateau (voir la méthode __str__() de la classe Plateau).
+        Si le joueur courant est un ordinateur, il faut calculer la position de la prochaine
+        case à jouer par cet ordinateur en utilisant la méthode choisir_prochaine_case().
+        Si le joueur courant est une personne, il faut lui demander la position de la prochaine
+        case qu'il veut jouer en utilisant la méthode demander_postion().
+        Finalement, il faut utiliser la méthode selectionner_case() pour modifier le contenu
+        de la case choisie soit par l'ordinateur soit par la personne.
 
-        pass
+        Args:
+            choix (int): Un entier représentant le choix de l'utilisateur dans le menu du jeu (1 ou 2).
+        """
+
+        assert isinstance(choix, int), "Partie: choix doit être un entier."
+        assert choix in [1, 2], "Partie: choix doit être 1 ou 2."
+        # choix !!??
+
+        print(self.plateau)
+        if self.joueur_courant.type == 'Ordinateur':
+            ligne, colonne = self.plateau.choisir_prochaine_case(self.joueur_courant.pion)
+        else:
+            ligne, colonne = self.demander_postion()
+
+        self.plateau.selectionner_case(ligne, colonne, self.joueur_courant.pion)
+        
 
 if __name__ == "__main__":
     # Point d'entrée du programme.
