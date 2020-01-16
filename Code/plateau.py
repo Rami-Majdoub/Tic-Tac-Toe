@@ -81,7 +81,10 @@ class Plateau:
         Returns:
             bool: True si le plateau n'est pas plein, False autrement.
         """
-        pass
+        for i in range(0, 3):
+            for j in range(0, 3):
+                if self.cases[i,j].est_vide(): return True
+        return False
 
     def position_valide(self, ligne, colonne):
         """
@@ -99,7 +102,7 @@ class Plateau:
         assert isinstance(ligne, int), "Plateau: ligne doit être un entier."
         assert isinstance(colonne, int), "Plateau: colonne doit être un entier."
 
-        pass
+        return ligne in range(0, 3) and colonne in range(0, 3)
 
     def selectionner_case(self, ligne, colonne, pion):
         """

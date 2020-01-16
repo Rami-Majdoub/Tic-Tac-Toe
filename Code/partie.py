@@ -68,8 +68,14 @@ class Partie:
         Si l'utilisateur ne veut plus recommencer, il faut afficher ce message:
         ***Merci et au revoir !***
         """
-
-        pass
+        print("""Bienvenue au jeu Tic Tac Toe.
+        ---------------Menu---------------
+        1- Jouer avec l'ordinateur.
+        2- Jouter avec une autre personne.
+        0- Quitter.
+        -----------------------------------
+        Entrez s.v.p. un nombre entre 0 et 2:?
+        """, setp = '|')
 
     def saisir_nombre(self, nb_min, nb_max):
         """
@@ -90,7 +96,11 @@ class Partie:
         assert isinstance(nb_min, int), "Partie: nb_min doit être un entier."
         assert isinstance(nb_max, int), "Partie: nb_max doit être un entier."
 
-        pass
+        while True:
+            x = input('Entrer s.v.p un nombre entre {} et {}: ?'.format(nb_min, nb_max))
+            if x.isnumeric() and int(x) in range(nb_min, nb_max): break
+            print('***Valeur incorrecte!***.')
+        return int(x)
 
     def demander_forme_pion(self):
         """
@@ -102,9 +112,10 @@ class Partie:
         Returns:
             string: Le catactère saisi par l'utilisateur après validation.
         """
-
-        pass
-
+        while True:
+            ch = input('Sélectionner s.v.p la forme de votre pion (X, O):? ')
+            if ch.upper() in ('O', 'X'): return ch.upper()
+            
     def tour(self, choix):
         """
         Permet d'exécuter le tour d'un joueur (une personne ou un ordinateur).
